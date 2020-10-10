@@ -113,14 +113,14 @@
   In this step you will implement two functions, wrappers for the GitHub API. You will use them to get information from GitHub later.
 
   Tasks:
-  - [ ] `searchRepositories(query)`: should search for repositories given certain programming languages and/or keywords
+  - [x] `searchRepositories(query)`: should search for repositories given certain programming languages and/or keywords
     - The `query` function parameter is an `Object` of key-value pairs of the request query parameters (eg. `{ q: 'language:javascript' }`, defaults to `{}`)
     - It returns a `Promise` of the HTTP response without modification
-  - [ ] `getContributors(repository, query)`: get contributors list with additions, deletions, and commit counts (statistics)
+  - [x] `getContributors(repository, query)`: get contributors list with additions, deletions, and commit counts (statistics)
     - `repository` function parameter is a String of the repository full name, including the owner (eg. `RisingStack/cache`)
     - The `query` function parameter is an `Object` of key-value pairs of the request query parameters (defaults to `{}`)
     - It returns a `Promise` of the HTTP response without modification
-  - [ ] Write unit tests for each function, use `nock` to intercept HTTP calls to the GitHub API endpoints
+  - [x] Write unit tests for each function, use `nock` to intercept HTTP calls to the GitHub API endpoints
 
   Readings:
   - [Github API v3](https://developer.github.com/v3)

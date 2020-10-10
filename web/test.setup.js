@@ -7,6 +7,11 @@ const winston = require('winston')
 
 chai.use(sinonChai)
 
+// Setup environment variables
+process.env.PORT = 3001
+process.env.GITHUB_ACCESS_TOKEN = 'token'
+process.env.GITHUB_API = 'https://api.github.com'
+
 // logger
 winston.setLevels({ test: 0, error: 1, warn: 2, info: 3, verbose: 4, debug: 5, silly: 6 })
 winston.addColors({

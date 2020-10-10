@@ -10,7 +10,9 @@ const envSchema = Joi.object({
     .integer()
     .min(3000)
     .max(3999)
-    .required()
+    .required(),
+  GITHUB_ACCESS_TOKEN: Joi.string().required(),
+  GITHUB_API: Joi.string().required()
 }).unknown()
 
 try {
@@ -22,6 +24,8 @@ try {
 
 const config = {
   port: envVar.PORT,
+  githubAccessToken: envVar.GITHUB_ACCESS_TOKEN,
+  githubApi: envVar.GITHUB_API
 }
 
 module.exports = config

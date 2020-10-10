@@ -26,4 +26,5 @@ logger.default.transports.console.prettyPrint = true
 // start process
 logger.info('Starting web process', { pid: process.pid })
 
+require('dotenv').config()
 require('./web')
