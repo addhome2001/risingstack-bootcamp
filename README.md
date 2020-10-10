@@ -124,7 +124,7 @@
 
   Readings:
   - [Github API v3](https://developer.github.com/v3)
-  - [`request`](https://www.npmjs.com/package/request-promise) & [`request-promise-native`](https://www.npmjs.com/package/request-promise-native) packages
+  - [`request`](https://www.npmjs.com/package/node-fetch)
   - [`nock`](https://github.com/node-nock/nock) for mocking endpoints
 
   Extra:
