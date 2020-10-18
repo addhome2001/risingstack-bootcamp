@@ -141,7 +141,7 @@
   It consists of 3 tables: `user`, `repository`, `contribution`. Rows in the `repository` table have foreign keys to a record in the `user` table, `owner`. The `contribution` table is managing many-to-many relationship between the `user` and `repository` tables with foreign keys.
 
   Tasks:
-  - [ ] Edit the config and specify the `migrations` field in the knex initialization `Object`, for example:
+  - [x] Edit the config and specify the `migrations` field in the knex initialization `Object`, for example:
     ```js
       {
         client: 'pg',
@@ -151,7 +151,7 @@
         }
       }
     ```
-  - [ ] Create one migration file per table (eg. `1-create-user.js`, `2-create-repository.js`, `3-create-contribution.js`) with the following skeleton:
+  - [x] Create one migration file per table (eg. `1-create-user.js`, `2-create-repository.js`, `3-create-contribution.js`) with the following skeleton:
     - `up` method has the logic for the migration, `down` is for reverting it
     - The migrations are executed in transactions
     - The files are executed in alphabetical order
@@ -175,9 +175,9 @@
       down
     }
     ```
-  - [ ] Add a `migrate-db` script to the scripts in `package.json`, edit `scripts/migrate-db.js` to add the migration call. Finally, run your migration script to create the tables:
+  - [*] Add a `migrate-db` script to the scripts in `package.json`, edit `scripts/migrate-db.js` to add the migration call. Finally, run your migration script to create the tables:
     ```sh
-    $ npm run migrate-db -- --local
+    $ NODE_ENV=development npm run migrate-db
     ```
 
   Readings:

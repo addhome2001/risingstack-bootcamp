@@ -9,7 +9,8 @@
     "test-web": "NODE_ENV=test PROCESS_TYPE=web mocha 'web/test.setup.js' 'web/**/*.spec.js'",
     "test-only": "npm run test-web",
     "lint": "eslint .",
-    "test": "npm run lint && npm run test-only"
+    "test": "npm run lint && npm run test-only",
+    "migrate-db": "node -r dotenv/config ./scripts/migrate-db.js"
   },
   "repository": "git+https://github.com/RisingStack/risingstack-bootcamp-reference.git",
   "author": "Andras Toth <andras.toth@risingstack.com>",
@@ -24,7 +25,7 @@
   "dependencies": {
     "ioredis": "3.1.1",
     "joi": "10.6.0",
-    "knex": "0.13.0",
+    "knex": "^0.21.6",
     "koa": "2.3.0",
     "koa-bodyparser": "4.2.0",
     "koa-compose": "4.0.0",
