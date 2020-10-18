@@ -5,6 +5,8 @@ const logger = require('winston')
 const config = require('./config')
 const server = require('./server')
 
+require('../db')
+
 const serverListen = promisify(server.listen).bind(server)
 
 serverListen(config.port)
