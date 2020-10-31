@@ -190,13 +190,13 @@
   In this step you will implement and test helper functions for inserting, changing and reading data from the database.
 
   Tasks:
-  - [ ] Implement the user model: 
+  - [x] Implement the user model: 
     - `User.insert({ id, login, avatar_url, html_url, type })`
       - validate the parameters
     - `User.read({ id, login })`
       - validate the parameters
       - one is required: `id` or `login`
-  - [ ] Implement the repository model:
+  - [x] Implement the repository model:
     - `Repository.insert({ id, owner, full_name, description, html_url, language, stargazers_count })`
       - Validate the parameters
       - `description` and `language` can be empty `String`s
@@ -204,7 +204,7 @@
       - Validate the parameters
       - One is required: `id` or `full_name`
       - Return the owner as well as an object (join tables and reorganize fields)
-  - [ ] Implement the contribution model: 
+  - [x] Implement the contribution model: 
     - `Contribution.insert({ repository, user, line_count })`
       - Validate the parameters
     - `Contribution.insertOrReplace({ repository, user, line_count })`
