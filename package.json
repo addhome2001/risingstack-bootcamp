@@ -10,7 +10,8 @@
     "test-only": "npm run test-web",
     "lint": "eslint .",
     "test": "npm run lint && npm run test-only",
-    "migrate-db": "node -r dotenv/config ./scripts/migrate-db.js"
+    "migrate-db": "node -r dotenv/config ./scripts/migrate-db.js",
+    "trigger": "node -r dotenv/config ./scripts/trigger.js"
   },
   "repository": "git+https://github.com/RisingStack/risingstack-bootcamp-reference.git",
   "author": "Andras Toth <andras.toth@risingstack.com>",
