@@ -245,27 +245,28 @@
   **Make a drawing of the message flow, it will help you a lot!**
 
   Tasks:
-  - [ ] Start Redis locally
-  - [ ] Implement the contributions handler:
+  - [x] Start Redis locally
+  - [x] Implement the contributions handler:
     - The responsibility of the contributions handler is to fetch the contributions of a repository from the GitHub API and to save the contributors and their line counts to the database
     - Validate the `message`, it has two fields: `date` and `repository` with `id` and `full_name` fields
     - Get the contributions from the GitHub API (use your models created in step 2)
     - Count all the lines currently in the repository per users (use `lodash` and `Array` functions)
     - Save the users to the database, don't fail if the user already exists (use your models created in step 3)
     - Save the contributions to the database, insert or replace (use your models created in step 3)
-  - [ ] Implement the repository handler:
+  - [x] Implement the repository handler:
     - Validate the `message`, it has three fields: `date`, `query` and `page`
     - Get the repositories from the GitHub API (use your models created in step 2) with the `q`, `page` and `per_page` (set to 100) query parameters.
     - Modify the response to a format which is close to the database models (try to use [`lodash/fp`](https://github.com/lodash/lodash/wiki/FP-Guide))
     - Save the owner to the database, don't fail if the user already exists (use your models created in step 3)
     - Save the repository to the database, don't fail if the repository already exists (use your models created in step 3)
     - Publish a message to the `contributions` channel with the same `date`
-  - [ ] Implement the trigger handler:
+  - [x] Implement the trigger handler:
     - The responsibility of the trigger handler is to send 10 messages to the `repository` collect channel implemented above. 10, because GitHub only gives access to the first 1000 (10 * page size of 100) search results
     - Validate the `message`, it has two fields: `date` and `query`
-  - [ ] We would like to make our first search and data collection from GitHub.
+  - [x] We would like to make our first search and data collection from GitHub.
     - For this, create a trigger.js file in the scripts folder. It should be a simple run once Node script which will publish a message to the `trigger` channel with the query passed in as an environment variable (`TRIGGER_QUERY`), then exit. It should have the same `--local`, `-L` flag, but for setting the `REDIS_URI`, as the migrate-db script.
     - Add a `trigger` field to the scripts in `package.json` that calls your `trigger.js` script.
+    - triggered by `NODE_ENV=development TRIGGER_QUERY=<query> yarn trigger`
 
   Readings:
   - [12 factor - Processes](https://12factor.net/processes)

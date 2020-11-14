@@ -9,8 +9,7 @@ const envSchema = Joi.object({
     .number()
     .integer()
     .min(3000)
-    .max(3999)
-    .required(),
+    .max(3999),
   GITHUB_ACCESS_TOKEN: Joi.string().required(),
   GITHUB_API: Joi.string().required(),
   PG_CONNECTION_STRING: Joi.string().required(),
@@ -24,7 +23,7 @@ try {
 }
 
 const config = {
-  port: envVar.PORT,
+  port: envVar.PORT || 3000,
   githubAccessToken: envVar.GITHUB_ACCESS_TOKEN,
   githubApi: envVar.GITHUB_API,
   pgConnectionUrl: envVar.PG_CONNECTION_STRING,
