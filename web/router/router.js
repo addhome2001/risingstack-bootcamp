@@ -1,84 +1,102 @@
 'use strict'
 
+const { promisify } = require('util')
+const exec = promisify(require('child_process').exec)
 const Router = require('koa-router')
-const { getContributors, searchRepositories } = require('../models/github')
-const { User } = require('../models/User')
+const _ = require('lodash')
 const { Repository } = require('../models/Repository')
 const { Contribution } = require('../models/Contribution')
 
 const router = new Router()
 
-router.get('/insert', async (ctx) => {
-  const user = await User.insert({
-    id: 124,
-    login: 'login',
-    avatarUrl: 'https://google.com',
-    htmlUrl: 'https://google.com',
-    type: 'oauth'
-  })
+router.post('/api/v1/trigger', (ctx) => {
+  const { query } = _.get(ctx, 'request.body', {})
 
-  ctx.body = user
-})
-
-router.get('/read', async (ctx) => {
-  const user = await User.read({
-    id: 124
-  })
-
-  ctx.body = user
-})
-
-router.get('/insert/repo', async (ctx) => {
-  const repository = await Repository.insert({
-    id: 446,
-    owner: 123,
-    fullName: 'Mock Repo',
-    htmlUrl: 'http://www.google.com',
-    stargazersCount: 12
-  })
-
-  ctx.body = repository
-})
-
-router.get('/read/repo', async (ctx) => {
-  const repository = await Repository.read({
-    id: 444
-  })
-
-  ctx.body = repository
-})
-
-router.get('/read/contribution', async (ctx) => {
-  const contribution = await Contribution.read({
-    user: {
-      id: 123
-    },
-    repository: {
-      id: 444
+  if (!query) {
+    ctx.status = 400
+    ctx.body = {
+      message: 'Validation Failed',
+      errors: [{
+        field: 'query',
+        message: 'Query cannot be blank'
+      }]
     }
-  })
+  }
 
-  ctx.body = contribution
+  try {
+    exec(`NODE_ENV=${process.env.NODE_ENV} TRIGGER_QUERY=${query} yarn trigger`)
+    ctx.status = 201
+    ctx.body = {
+      message: 'Triggered workers successfully'
+    }
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = {
+      message: 'Internal Server Error'
+    }
+  }
 })
 
-router.get('/insert/contribution', async (ctx) => {
-  const contribution = await Contribution.insertOrReplace({
-    repository: 446,
-    user: 124,
-    lineCount: 12
-  })
+router.get('/api/v1/repository/:id', async (ctx) => {
+  const { id } = ctx.params || {}
 
-  ctx.body = contribution
+  try {
+    const repository = await Repository.read({ id })
+    ctx.body = repository
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = {
+      message: 'Internal Server Error'
+    }
+  }
 })
 
-router.get('/get/contributors', async (ctx) => {
-  const contributors = await getContributors('naptha/tesseract.js').then((response) => response.json())
-  ctx.body = contributors
+router.get('/api/v1/repository/:id/contributions', async (ctx) => {
+  const { id } = ctx.params || {}
+
+  try {
+    const contributions = await Contribution.read({
+      repository: { id }
+    })
+    ctx.body = contributions
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = {
+      message: 'Internal Server Error'
+    }
+  }
 })
 
-router.get('/search/repositories', async (ctx) => {
-  const repositories = await searchRepositories({ q: 'languages:javascript' }).then((res) => res.json())
-  ctx.body = repositories
+router.get('/api/v1/repository/:owner/:name', async (ctx) => {
+  const { owner, name } = ctx.params || {}
+
+  try {
+    const repository = await Repository.read({
+      fullName: `${owner}/${name}`
+    })
+    ctx.body = repository
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = {
+      message: 'Internal Server Error'
+    }
+  }
+})
+
+router.get('/api/v1/repository/:owner/:name/contributions', async (ctx) => {
+  const { owner, name } = ctx.params || {}
+
+  try {
+    const contributions = await Contribution.read({
+      repository: { fullName: `${owner}/${name}` }
+    })
+    ctx.body = contributions
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = {
+      message: 'Internal Server Error'
+    }
+  }
 })
 
 module.exports = router

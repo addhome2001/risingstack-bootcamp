@@ -175,7 +175,7 @@
       down
     }
     ```
-  - [*] Add a `migrate-db` script to the scripts in `package.json`, edit `scripts/migrate-db.js` to add the migration call. Finally, run your migration script to create the tables:
+  - [x] Add a `migrate-db` script to the scripts in `package.json`, edit `scripts/migrate-db.js` to add the migration call. Finally, run your migration script to create the tables:
     ```sh
     $ NODE_ENV=development npm run migrate-db
     ```
@@ -279,11 +279,11 @@
   In this step you will add a few routes to the existing web application to trigger a data crawl and to expose the collected data.
 
   Tasks:
-  - [ ] The database requirements changed in the meantime, create a new migration (call it `4-add-indexes.js`), add indexes to `user.login` and `repository.full_name` (use `knex.schema.alterTable`)
-  - [ ] Implement the `POST /api/v1/trigger` route, the body contains an object with a string `query` field, you will use this query to send a message to the corresponding Redis channel. Return `201` when it was successful
-  - [ ] Implement the `GET /api/v1/repository/:id` and `GET /api/v1/repository/:owner/:name` endpoints
-  - [ ] Implement the `GET /api/v1/repository/:id/contributions`  and `GET /api/v1/repository/:owner/:name/contributions` endpoints
-  - [ ] Create a middleware (`requestLogger({ level = 'silly' })`) and add it to your server, that logs out:
+  - [x] The database requirements changed in the meantime, create a new migration (call it `4-add-indexes.js`), add indexes to `user.login` and `repository.full_name` (use `knex.schema.alterTable`)
+  - [x] Implement the `POST /api/v1/trigger` route, the body contains an object with a string `query` field, you will use this query to send a message to the corresponding Redis channel. Return `201` when it was successful
+  - [x] Implement the `GET /api/v1/repository/:id` and `GET /api/v1/repository/:owner/:name` endpoints
+  - [x] Implement the `GET /api/v1/repository/:id/contributions`  and `GET /api/v1/repository/:owner/:name/contributions` endpoints
+  - [x] Create a middleware (`requestLogger({ level = 'silly' })`) and add it to your server, that logs out:
     - The method and original url of the request
     - Request headers (except `authorization` and `cookie`) and body
     - The request duration in `ms`
