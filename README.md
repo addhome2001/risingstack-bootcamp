@@ -314,19 +314,19 @@
   In this step you will add some features, which are required to have your application running in production environment.
 
   Tasks:
-  - [ ] Add a `destroy` function to the redis model, which calls `disconnect` on both redis clients and returns a `Promise`
-  - [ ] Listen on the `SIGTERM` signal in `web/index.js`.
+  - [x] Add a `destroy` function to the redis model, which calls `disconnect` on both redis clients and returns a `Promise`
+  - [x] Listen on the `SIGTERM` signal in `web/index.js`.
     - Create a function called `gracefulShutdown`
     - Use koa's `.callback()` function to create a `http` server (look for `http.createServer`) and convert `server.close` with `util.promisify`
     - Close the server and destroy the database and redis connections
     - Log out and exit the process with code `1` if something fails
     - Exit the process with code `0` if everything is closed succesfully
-  - [ ] Implement the same for the worker process
-  - [ ] Add a health check endpoint for the web server
+  - [x] Implement the same for the worker process
+  - [x] Add a health check endpoint for the web server
     - Add a `healthCheck` function for the database model, use the `PG_HEALTH_CHECK_TIMEOUT` environment variable to set the query timeout (set default to `2000` ms)
     - Add a `healthCheck` function to the redis model
     - Implement the `GET /healthz` endpoint, return `200` with JSON body `{ "status": "ok" }`when everything is healthy, `500` if any of the database or redis connections are not healthy and `503` if the process got `SIGTERM` signal
-  - [ ] Create a http server and add a similar health check endpoint for the worker process
+  - [x] Create a http server and add a similar health check endpoint for the worker process
 
   Readings:
   - [Signal events](https://nodejs.org/api/process.html#process_signal_events)

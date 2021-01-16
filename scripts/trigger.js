@@ -1,18 +1,35 @@
 'use strict'
 
 const logger = require('winston')
-const Redis = require('ioredis')
+const getRedisClient = require('../redis/getRedisClient')
+const createHealthCheckServer = require('../helpers/createHealthCheckServer')
 
 // Workers
 const { trigger, repository, contribution } = require('../workers')
 
-const redis = new Redis(process.env.REDIS_URI)
-const pub = new Redis(process.env.REDIS_URI)
+const {
+  redisClient: subClient,
+  healthCheck: subHealthCheck,
+  destroy: subDestroy,
+} = getRedisClient(process.env.REDIS_URI)
 
-const disconnectConnections = () => {
-  redis.disconnect()
-  pub.disconnect()
-}
+const {
+  redisClient: pubClient,
+  healthCheck: pubHealthCheck,
+  destroy: pubDestroy
+} = getRedisClient(process.env.REDIS_URI)
+
+const destroyRedisClients = () =>
+  Promise.all([
+    subDestroy(),
+    pubDestroy(),
+  ])
+
+const healthCheckRedisClients = () =>
+  Promise.all([
+    pubHealthCheck(),
+    subHealthCheck()
+  ])
 
 const { TRIGGER_QUERY } = process.env
 
@@ -21,7 +38,7 @@ async function init() {
 
   try {
     const count = await new Promise((resolve, reject) => {
-      redis.subscribe(
+      subClient.subscribe(
         trigger.channelName,
         repository.channelName,
         contribution.channelName,
@@ -35,12 +52,12 @@ async function init() {
     logger.info(`There are ${count} channels we are currently subscribed to.`)
 
     // Trigger the workers
-    pub.publish(trigger.channelName, JSON.stringify({
+    pubClient.publish(trigger.channelName, JSON.stringify({
       date: date.toISOString(),
       query: TRIGGER_QUERY
     }))
 
-    redis.on('message', async (channel, message) => {
+    subClient.on('message', async (channel, message) => {
       const parsedMessage = JSON.parse(message)
 
       if (!channel) return
@@ -54,7 +71,7 @@ async function init() {
           if (!pageCount) return
 
           Array.from({ length: pageCount }).forEach((_, page) => {
-            pub.publish(repository.channelName, JSON.stringify({ ...rest, page: page + 1 }))
+            pubClient.publish(repository.channelName, JSON.stringify({ ...rest, page: page + 1 }))
           })
           break
         }
@@ -62,7 +79,7 @@ async function init() {
         case repository.channelName: {
           repository(
             parsedMessage,
-            (params) => pub.publish(contribution.channelName, JSON.stringify(params))
+            (params) => pubClient.publish(contribution.channelName, JSON.stringify(params))
           )
 
           break
@@ -77,9 +94,10 @@ async function init() {
       }
     })
   } catch (e) {
-    disconnectConnections()
+    await destroyRedisClients()
     logger.error(`Error when executing trigger.js: ${e.stack}`)
   }
 }
 
 init()
+createHealthCheckServer({ healthCheckRedisClients, destroyRedisClients })

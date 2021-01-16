@@ -4,6 +4,7 @@ const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
 const Router = require('koa-router')
 const _ = require('lodash')
+const { healthCheck: dbHealthCheck } = require('../../db')
 const { Repository } = require('../models/Repository')
 const { Contribution } = require('../models/Contribution')
 
@@ -95,6 +96,21 @@ router.get('/api/v1/repository/:owner/:name/contributions', async (ctx) => {
     ctx.status = 500
     ctx.body = {
       message: 'Internal Server Error'
+    }
+  }
+})
+
+router.get('/healthz', async (ctx) => {
+  if (ctx.isShutdown) {
+    ctx.status = 503
+    ctx.body = { status: 'isShutdown' }
+  } else {
+    try {
+      await dbHealthCheck()
+      ctx.body = { status: 'ok' }
+    } catch (e) {
+      ctx.status = 500
+      ctx.body = { status: 'failed', message: e.message }
     }
   }
 })
